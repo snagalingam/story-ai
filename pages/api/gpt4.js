@@ -11,7 +11,11 @@ export default async function handler(req, res) {
   openai = new OpenAIApi(configuration);
 
   try {
-    const userPrompt = req.body.userPrompt;
+    let userPrompt = req.body.userPrompt;
+    userPrompt = `Write a 5 page story with one sentence on each page for a 5-year-old child. 
+    Make sure to start each page with "Page" and then the page number. 
+    The main character will be called Oscar.
+    The story should be about ${userPrompt}`;
 
     const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",

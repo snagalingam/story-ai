@@ -14,7 +14,7 @@ export default function HomePage() {
     setUserPrompt(e.target.value);
   }
 
-  const [apiResponse, setApiResponse] = useState('');
+  const [pagesText, setPagesText] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +27,18 @@ export default function HomePage() {
         body: JSON.stringify({ userPrompt }),
       });
       const data = await res.json();
-      setApiResponse(data.answer); 
+
+      // Separate the text into pages
+      let responseStr = data.answer;
+      let splitResponse = responseStr.split('Page ');
+      splitResponse.shift();
+      let pages_data = {};
+      splitResponse.forEach(pageText => {
+        let [pageNumber, content] = pageText.split(': ');
+        pages_data[pageNumber.trim()] = content;
+      });
+
+      setPagesText(pages_data);
     } catch (error) {
       console.error(error);
     }
@@ -83,7 +94,13 @@ export default function HomePage() {
           Submit
         </button>
       </form>
-      <p>{apiResponse}</p> 
+      <div>
+        {Object.keys(pagesText).map((pageNumber) => (
+          <p key={pageNumber}>
+            <strong>Page {pageNumber}:</strong> {pagesText[pageNumber]}
+          </p>
+        ))}
+      </div>
     </div>
   )
 }
