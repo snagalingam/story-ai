@@ -4,7 +4,7 @@ const YourComponent = () => {
   const [imageSrc, setImageSrc] = useState('');
 
   const handlePredict = async () => {
-    const url = 'https://story-ai-2.uw.r.appspot.com/predict';
+    const url = 'http://story-ai-393015.uc.r.appspot.com/predict';
     const data = { prompt: 'ced dog in the ocean' };
 
     try {
