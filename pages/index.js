@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image'
 
 export default function HomePage() {
   // User selects character for the story
@@ -128,7 +129,7 @@ export default function HomePage() {
         justifyContent: 'center',
         gap: '50px'
       }}>
-        <img
+        <Image
           src="/cat.jpg"
           alt="Image 1"
           onClick={() => handleImageClick('image1')}
@@ -140,7 +141,7 @@ export default function HomePage() {
             objectFit: 'contain',
             borderRadius: '20px'
           }} />
-        <img
+        <Image
           src="/05.jpg"
           alt="Image 2"
           onClick={() => handleImageClick('image2')}
@@ -155,7 +156,7 @@ export default function HomePage() {
       </div>
       {imageSelected && (
         <div style={{paddingTop: '20px'}}>
-          <p>Looks like you've selected Oscar. Now, tell me the type of adventure you want Oscar to go on.</p>
+          <p>{"Looks like you've selected Oscar. Now, tell me the type of adventure you want Oscar to go on."}</p>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
             <textarea
               value={userPrompt}
