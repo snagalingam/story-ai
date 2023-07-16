@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   try {
     let userPrompt = req.body.userPrompt;
-    userPrompt = `Write a 5 page story with one sentence on each page for a 5-year-old child. 
+    userPrompt = `Write a 5 page story with 2 sentences on each page for a 10-year-old child. 
     Make sure to start each page with "Page {page number}:". 
     The main character will be called Oscar. He is a cat.
     The story should be about ${userPrompt} 
