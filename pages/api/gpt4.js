@@ -17,11 +17,10 @@ export default async function handler(req, res) {
 
     userPrompt = `Write a 5 page story with 2 sentences on each page for a 10-year-old child. 
     The main character will be called ${imageName}. He is a ${animalType}. The story should be about ${userPrompt}
-    After the story, create a new section called Image Prompt. 
     Then summarize each page describing an image you could see in a story book for a 2-year old. 
     Do not describe ${imageName}. We already know what he looks like.
 
-    Your response should be in the following format:
+    Your response should be in the following format. Do not include any other headers.
     Page 1: XXX
     Page 2: XXX
     Page 3: XXX
