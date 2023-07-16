@@ -25,7 +25,10 @@ h1 {
   margin-bottom: 1rem; /* Add some space below the heading */
 }
 
-img {
-  max-width: 300px;
-  max-height: 300px;
+p {
+  color: #333; /* Set the text color to dark grey */
+  font-family: Arial, sans-serif; /* Set the font */
+  font-size: 1.25rem; /* Set the font size */
+  text-align: center; /* Center align the text */
+  margin-bottom: 1rem; /* Add some space below the heading */
 }
