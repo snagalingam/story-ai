@@ -121,7 +121,7 @@ export default function HomePage() {
       margin: '0 auto',
       width: '50%'
     }}>
-      <p>Welcome to our creative storytelling realm! Today, together with our dedicated story writers, we'll guide you in writing and producing a captivating storybook. Let's dive in and give your furry friends the unforgettable narrative they deserve!</p>
+      <p>{"Welcome to our creative storytelling realm! Today, together with our dedicated story writers, we'll guide you in writing and producing a captivating storybook. Let's dive in and give your furry friends the unforgettable narrative they deserve!"}</p>
       <p>First, select a character that you would like to write a story about.</p>
       <div style={{
         paddingTop: '20px',
@@ -195,7 +195,7 @@ export default function HomePage() {
                 {loadingImages[pageNumber] ? (
                   <p>Our illustrators are working...</p> // replace this with your loading spinner component
                 ) : (
-                  pagesImages[pageNumber] && <img src={pagesImages[pageNumber]} alt={`Page ${pageNumber}`} />
+                  pagesImages[pageNumber] && <Image src={pagesImages[pageNumber]} alt={`Page ${pageNumber}`} />
                 )}
               </div>
             ))}
