@@ -7,9 +7,21 @@ export default function HomePage() {
   // User selects character for the story
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageSelected, setImageSelected] = useState(false);
+  const [imageName, setImageName] = useState(false);
+  const [animalType, setAnimalType] = useState(false);
+  const [instanceType, setInstanceType] = useState(false);
   const handleImageClick = (image) => {
     setSelectedImage(image);
     setImageSelected(true);
+    if (image === 'image1') {
+      setImageName('Oscar');
+      setAnimalType('cat');
+      setInstanceType('ukj cat');
+    } else {
+      setImageName('Spot');
+      setAnimalType('dog');
+      setInstanceType('ced dog');
+    }
   }
   
   // User creates a prompt for the story
@@ -30,10 +42,11 @@ export default function HomePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userPrompt }),
+        body: JSON.stringify({ userPrompt, imageName, animalType }),
       });
       const data = await res.json();
       let responseStr = data.answer;
+      console.log(responseStr);
       let splitResponse = responseStr.split('Page ');
       splitResponse.shift();
   
@@ -54,7 +67,6 @@ export default function HomePage() {
         }
       });
 
-      console.log(responseStr);
       console.log(pages_data);
       console.log(images_data);
       setPagesText(pages_data);
@@ -71,12 +83,13 @@ export default function HomePage() {
   const [loadingImages, setLoadingImages] = useState({});
   const [pagesImages, setPagesImages] = useState({});
   useEffect(() => {
-    const fetchImages = async () => {
+    const fetchImages = async (instanceType) => {
       for (const pageNumber of Object.keys(imagesText)) {
         let content = imagesText[pageNumber];
         
-        const additionalText = "a photo of ukj cat";
-        content = additionalText + content;
+        const additionalText = "a photo of ";
+        content = additionalText + instanceType + " " + content;
+        console.log(content)
   
         // Set loading to true for this image
         setLoadingImages(prevState => ({ ...prevState, [pageNumber]: true }));
@@ -109,8 +122,8 @@ export default function HomePage() {
       }
     };
   
-    fetchImages();
-  }, [imagesText]);
+    fetchImages(instanceType);
+  }, [imagesText, instanceType]);
 
   return (
     <div style={{ 
@@ -122,7 +135,7 @@ export default function HomePage() {
       width: '50%'
     }}>
       <p>{"Welcome to our creative storytelling realm! Today, together with our dedicated story writers, we'll guide you in writing and producing a captivating storybook. Let's dive in and give your furry friends the unforgettable narrative they deserve!"}</p>
-      <p>First, select a character that you would like to write a story about.</p>
+      <p>{"First, select a character that you would like to write a story about."}</p>
       <div style={{
         paddingTop: '20px',
         display: 'flex',
@@ -132,43 +145,39 @@ export default function HomePage() {
         <Image
           src="/cat.jpg"
           alt="Image 1"
+          width={300}
+          height={300}
           onClick={() => handleImageClick('image1')}
           style={{
             border: selectedImage === 'image1' ? '2px solid #696969' : '2px solid transparent',
-            width: '100%',
-            maxWidth: '300px',
-            height: 'auto',
-            objectFit: 'contain',
             borderRadius: '20px'
           }} />
         <Image
-          src="/05.jpg"
+          src="/dog.jpg"
           alt="Image 2"
+          width={300}
+          height={300}
           onClick={() => handleImageClick('image2')}
           style={{
             border: selectedImage === 'image2' ? '2px solid #696969' : '2px solid transparent',
-            width: '100%',
-            maxWidth: '300px',
-            height: 'auto',
-            objectFit: 'contain',
             borderRadius: '20px'
           }} />
       </div>
       {imageSelected && (
         <div style={{paddingTop: '20px'}}>
-          <p>{"Looks like you've selected Oscar. Now, tell me the type of adventure you want Oscar to go on."}</p>
+          <p>{"Looks like you've selected " + imageName + ". Now, tell me the type of adventure you want " + imageName + " to go on."}</p>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
             <textarea
               value={userPrompt}
               onChange={handlePromptChange}
               placeholder="Write your prompt here"
-              rows={3} // Set the number of rows
+              rows={3} 
               style={{
-                width: '80%', // change width if needed
+                width: '80%', 
                 padding: '10px',
-                fontSize: '1em', // make the text a bit larger
-                border: '2px solid #000', // border around the input
-                borderRadius: '5px' // round the corners a bit
+                fontSize: '1em', 
+                border: '2px solid #000', 
+                borderRadius: '5px' 
               }}
             />
             <button
@@ -177,12 +186,12 @@ export default function HomePage() {
               style={{
                 margin: '10px 0',
                 padding: '10px',
-                backgroundColor: loading ? '#ddd' : '#000', // make button gray when loading
+                backgroundColor: loading ? '#ddd' : '#000', 
                 color: '#fff',
                 border: 'none',
                 borderRadius: '5px',
                 fontSize: '1em',
-                cursor: loading ? 'default' : 'pointer' // change cursor based on loading state
+                cursor: loading ? 'default' : 'pointer' 
               }}
             >
               {loading ? 'Our writers are working...' : 'Submit'}
@@ -193,9 +202,15 @@ export default function HomePage() {
               <div key={pageNumber}>
                 <strong>Page {pageNumber}:</strong> {pagesText[pageNumber]}
                 {loadingImages[pageNumber] ? (
-                  <p>Our illustrators are working...</p> // replace this with your loading spinner component
+                  <p>Our illustrators are working...</p> 
                 ) : (
-                  pagesImages[pageNumber] && <Image src={pagesImages[pageNumber]} alt={`Page ${pageNumber}`} />
+                  pagesImages[pageNumber] && 
+                  <Image 
+                    src={pagesImages[pageNumber]} 
+                    alt={`Page ${pageNumber}`} 
+                    width={300}
+                    height={300}
+                  />
                 )}
               </div>
             ))}
