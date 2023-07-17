@@ -33,19 +33,42 @@ export default function HomePage() {
   // Ask ChatGPT to write a story based on the prompt
   const [pagesText, setPagesText] = useState('');
   const [imagesText, setImagesText] = useState('');
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const firstPrompt = `Write a 5 page story with 2 sentences on each page for a 10-year-old child. 
+    The main character will be called ${imageName}. He is a ${animalType}. The story should be about ${userPrompt}.
+    Your response should be in the following format. Do not include any other headers.
+    Page 1: XXX
+    Page 2: XXX
+    Page 3: XXX
+    Page 4: XXX
+    Page 5: XXX
+    `;
+
+    const secondPrompt = (`Then for each page describe an image that would go with it in a story book with only 5 words.
+    Do not describe ${imageName}. We already know what he looks like. Your response should be in the following format. Do not include any other headers.
+    Page 1: XXX
+    Page 2: XXX
+    Page 3: XXX
+    Page 4: XXX
+    Page 5: XXX
+    `);
+
+    let responseStr = '';
+    console.log(firstPrompt);
+    
     try {
-      const res = await fetch('/api/gpt4', {
+      const res = await fetch('/api/story_text', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userPrompt, imageName, animalType }),
+        body: JSON.stringify({ firstPrompt }),
       });
       const data = await res.json();
-      let responseStr = data.answer;
+      responseStr = data.answer;
       console.log(responseStr);
       let splitResponse = responseStr.split('Page ');
       splitResponse.shift();
@@ -57,19 +80,42 @@ export default function HomePage() {
         let [pageNumber, content] = pageText.split(': ');
         pageNumber = pageNumber.trim();
         content = content.trim();
-  
-        if (index < 5) {
-          // First page for pagesText
-          pages_data[pageNumber] = content;
-        } else {
-          // Second page for imagesText
-          images_data[pageNumber] = content;
-        }
+        pages_data[pageNumber] = content;
+        images_data[pageNumber] = content;
       });
 
       console.log(pages_data);
-      console.log(images_data);
       setPagesText(pages_data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+    
+    try {
+      const res = await fetch('/api/image_text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ firstPrompt, responseStr, secondPrompt }),
+      });
+      const data = await res.json();
+      let imageStr = data.answer;
+      console.log(imageStr);
+      let splitResponse = imageStr.split('Page ');
+      splitResponse.shift();
+  
+      let images_data = {};
+
+      splitResponse.forEach((pageText, index) => {
+        let [pageNumber, content] = pageText.split(': ');
+        pageNumber = pageNumber.trim();
+        content = content.trim();
+        images_data[pageNumber] = content;
+      });
+
+      console.log(images_data);
       setImagesText(images_data);
     } catch (error) {
       console.error(error);

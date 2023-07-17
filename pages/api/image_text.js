@@ -11,28 +11,9 @@ export default async function handler(req, res) {
   openai = new OpenAIApi(configuration);
 
   try {
-    let userPrompt = req.body.userPrompt;
-    let imageName = req.body.imageName;
-    let animalType = req.body.animalType;
-
-    userPrompt = `Write a 5 page story with 2 sentences on each page for a 10-year-old child. 
-    The main character will be called ${imageName}. He is a ${animalType}. The story should be about ${userPrompt}
-    Then summarize each page describing an image you could see in a story book for a 2-year old. 
-    Do not describe ${imageName}. We already know what he looks like.
-
-    Your response should be in the following format. Do not include any other headers.
-    Page 1: XXX
-    Page 2: XXX
-    Page 3: XXX
-    Page 4: XXX
-    Page 5: XXX
-
-    Page 1: XXX
-    Page 2: XXX
-    Page 3: XXX
-    Page 4: XXX
-    Page 5: XXX
-    `;
+    const firstPrompt = req.body.firstPrompt;
+    const responseStr = req.body.responseStr;
+    const secondPrompt = req.body.secondPrompt;
 
     const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
@@ -43,7 +24,9 @@ export default async function handler(req, res) {
         top_p: 1,
         messages: [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": userPrompt},
+            {"role": "user", "content": firstPrompt },
+            {"role": "system", "content": responseStr },
+            {"role": "user", "content": secondPrompt },
         ]
     }, { timeout: 60000 });
 
